@@ -57,7 +57,6 @@ voronota_construct_contacts('-probe', 2.8, '-adjunct-solvent-direction', '-calcu
 voronota_voromqa_global("-adj-atom-sas-potential", "voromqa_sas_potential", "-adj-contact-energy", "voromqa_energy", "-smoothing-window", 0, "-adj-atom-quality", "voromqa_score_a", "-adj-residue-quality", "voromqa_score_r");
 
 voronota_cad_score('-target', 'apo', '-model', 'holo', '-t-adj-residue', 'cadscore', '-m-adj-residue', 'cadscore', '-smoothing-window', 0);
-voronota_set_adjunct_of_atoms_by_expression('-expression', '_linear_combo', '-input-adjuncts', 'cadscore', '-parameters', [-1.0, 1.0], '-output-adjunct', 'ground_truth');
 
 voronota_set_adjunct_of_atoms_by_type_number("-name atom_type -typing-mode protein_atom");
 voronota_set_adjunct_of_atoms_by_type_number("-name residue_type -typing-mode protein_residue");
@@ -67,13 +66,27 @@ voronota_set_adjunct_of_atoms_by_contact_adjuncts('[-solvent]', '-source-name', 
 voronota_set_adjunct_of_atoms_by_contact_adjuncts('[-solvent]', '-source-name', 'solvdir_y', '-destination-name', 'solvdir_y', '-pooling-mode', 'min');
 voronota_set_adjunct_of_atoms_by_contact_adjuncts('[-solvent]', '-source-name', 'solvdir_z', '-destination-name', 'solvdir_z', '-pooling-mode', 'min');
 
+voronota_set_adjuncts_of_atoms_by_ufsr('[-aname CA]', '-name-prefix', 'mc_ufsr');
+voronota_set_adjunct_of_atoms_by_residue_pooling('-source-name mc_ufsr_a1 -destination-name ufsr_a1 -pooling-mode max');
+voronota_set_adjunct_of_atoms_by_residue_pooling('-source-name mc_ufsr_b1 -destination-name ufsr_b1 -pooling-mode max');
+voronota_set_adjunct_of_atoms_by_residue_pooling('-source-name mc_ufsr_c1 -destination-name ufsr_c1 -pooling-mode max');
+voronota_set_adjunct_of_atoms_by_residue_pooling('-source-name mc_ufsr_a2 -destination-name ufsr_a2 -pooling-mode max');
+voronota_set_adjunct_of_atoms_by_residue_pooling('-source-name mc_ufsr_b2 -destination-name ufsr_b2 -pooling-mode max');
+voronota_set_adjunct_of_atoms_by_residue_pooling('-source-name mc_ufsr_c2 -destination-name ufsr_c2 -pooling-mode max');
+voronota_set_adjunct_of_atoms_by_residue_pooling('-source-name mc_ufsr_a3 -destination-name ufsr_a3 -pooling-mode max');
+voronota_set_adjunct_of_atoms_by_residue_pooling('-source-name mc_ufsr_b3 -destination-name ufsr_b3 -pooling-mode max');
+voronota_set_adjunct_of_atoms_by_residue_pooling('-source-name mc_ufsr_c3 -destination-name ufsr_c3 -pooling-mode max');
+
 voronota_auto_assert_full_success=false;
 voronota_set_adjunct_of_atoms("-use [-v! sas_area] -name sas_area -value 0");
 voronota_set_adjunct_of_atoms("-use [-v! solvdir_x] -name solvdir_x -value 0");
 voronota_set_adjunct_of_atoms("-use [-v! solvdir_y] -name solvdir_y -value 0");
 voronota_set_adjunct_of_atoms("-use [-v! solvdir_z] -name solvdir_z -value 0");
 voronota_set_adjunct_of_atoms("-use [-v! voromqa_sas_potential] -name voromqa_sas_potential -value 0");
+voronota_set_adjunct_of_atoms("-use [-v! cadscore] -name cadscore -value 1");
 voronota_auto_assert_full_success=true;
+
+voronota_set_adjunct_of_atoms_by_expression('-expression', '_linear_combo', '-input-adjuncts', 'cadscore', '-parameters', [-1.0, 1.0], '-output-adjunct', 'ground_truth');
 
 voronota_set_adjunct_of_atoms_by_expression("-use [] -expression _multiply -input-adjuncts voromqa_sas_potential sas_area -output-adjunct voromqa_sas_energy");
 
@@ -110,7 +123,7 @@ for(var i=0;i<modes.length;i++)
 	
 	voronota_export_atoms('-as-pdb', '-file', file_prefix+'.pdb', '-pdb-b-factor', 'ground_truth');
 	
-	voronota_export_adjuncts_of_atoms('-file', file_prefix+'_nodes.csv', '-use', '[]', '-no-serial', '-adjuncts', ['atom_index', 'residue_index', 'atom_type', 'residue_type', 'center_x', 'center_y', 'center_z', 'radius', 'sas_area', 'solvdir_x', 'solvdir_y', 'solvdir_z', 'voromqa_sas_energy', 'voromqa_depth', 'voromqa_score_a', 'voromqa_score_r', 'volume', 'volume_vdw', 'ground_truth'], '-sep', ',', '-expand-ids', true);
+	voronota_export_adjuncts_of_atoms('-file', file_prefix+'_nodes.csv', '-use', '[]', '-no-serial', '-adjuncts', ['atom_index', 'residue_index', 'atom_type', 'residue_type', 'center_x', 'center_y', 'center_z', 'radius', 'sas_area', 'solvdir_x', 'solvdir_y', 'solvdir_z', 'voromqa_sas_energy', 'voromqa_depth', 'voromqa_score_a', 'voromqa_score_r', 'volume', 'volume_vdw', 'ufsr_a1', 'ufsr_a2', 'ufsr_a3', 'ufsr_b1', 'ufsr_b2', 'ufsr_b3', 'ufsr_c1', 'ufsr_c2', 'ufsr_c3', 'ground_truth'], '-sep', ',', '-expand-ids', true);
 
 	voronota_export_adjuncts_of_contacts('-file', file_prefix+'_links.csv', '-atoms-use', '[]', '-contacts-use', '[-no-solvent]', '-no-serial', '-adjuncts', ['atom_index1', 'atom_index2', 'area', 'boundary', 'distance', 'voromqa_energy', 'seq_sep_class', 'covalent_bond', 'hbond'], '-sep', ',', '-expand-ids', true);
 }
