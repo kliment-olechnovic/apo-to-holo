@@ -110,9 +110,9 @@ for(var i=0;i<modes.length;i++)
 	
 	voronota_export_atoms('-as-pdb', '-file', file_prefix+'.pdb', '-pdb-b-factor', 'ground_truth');
 	
-	voronota_export_adjuncts_of_atoms('-file', file_prefix+'_nodes.csv', '-use', '[]', '-no-serial', '-adjuncts', ['atom_index', 'residue_index', 'atom_type', 'residue_type', 'center_x', 'center_y', 'center_z', 'radius', 'sas_area', 'solvdir_x', 'solvdir_y', 'solvdir_z', 'voromqa_sas_energy', 'voromqa_depth', 'voromqa_score_a', 'voromqa_score_r', 'volume', 'volume_vdw', 'ground_truth'], '-sep', ',', '-expand-ids', false);
+	voronota_export_adjuncts_of_atoms('-file', file_prefix+'_nodes.csv', '-use', '[]', '-no-serial', '-adjuncts', ['atom_index', 'residue_index', 'atom_type', 'residue_type', 'center_x', 'center_y', 'center_z', 'radius', 'sas_area', 'solvdir_x', 'solvdir_y', 'solvdir_z', 'voromqa_sas_energy', 'voromqa_depth', 'voromqa_score_a', 'voromqa_score_r', 'volume', 'volume_vdw', 'ground_truth'], '-sep', ',', '-expand-ids', true);
 
-	voronota_export_adjuncts_of_contacts('-file', file_prefix+'_links.csv', '-atoms-use', '[]', '-contacts-use', '[-no-solvent]', '-no-serial', '-adjuncts', ['atom_index1', 'atom_index2', 'area', 'boundary', 'distance', 'voromqa_energy', 'seq_sep_class', 'covalent_bond', 'hbond'], '-sep', ',', '-expand-ids', false);
+	voronota_export_adjuncts_of_contacts('-file', file_prefix+'_links.csv', '-atoms-use', '[]', '-contacts-use', '[-no-solvent]', '-no-serial', '-adjuncts', ['atom_index1', 'atom_index2', 'area', 'boundary', 'distance', 'voromqa_energy', 'seq_sep_class', 'covalent_bond', 'hbond'], '-sep', ',', '-expand-ids', true);
 }
 EOF
 } \
