@@ -46,9 +46,15 @@ if(segments1[0]!=segments2[0])
 	throw ("Mismatched length of segements for "+params.apo_name+" "+params.holo_name+": "+segments1[0]+" != "+segments2[0]);
 }
 
-voronota_construct_contacts('-probe', 2.8, '-adjunct-solvent-direction', '-calculate-bounding-arcs');
+voronota_construct_contacts('-probe', 0.01);
 
-voronota_voromqa_global("-adj-atom-sas-potential", "voromqa_sas_potential", "-adj-contact-energy", "voromqa_energy", "-smoothing-window", 0);
+voronota_set_adjunct_of_atoms_by_expression('-expression', '_linear_combo', '-input-adjuncts', 'volume', '-parameters', [1.0, 0.0], '-output-adjunct', 'volume_vdw');
+
+voronota_delete_adjuncts_of_atoms('-adjuncts', ['volume']);
+
+voronota_construct_contacts('-probe', 2.8, '-adjunct-solvent-direction', '-calculate-bounding-arcs', '-force');
+
+voronota_voromqa_global("-adj-atom-sas-potential", "voromqa_sas_potential", "-adj-contact-energy", "voromqa_energy", "-smoothing-window", 0, "-adj-atom-quality", "voromqa_score_a", "-adj-residue-quality", "voromqa_score_r");
 
 voronota_cad_score('-target', 'apo', '-model', 'holo', '-t-adj-residue', 'cadscore', '-m-adj-residue', 'cadscore', '-smoothing-window', 0);
 voronota_set_adjunct_of_atoms_by_expression('-expression', '_linear_combo', '-input-adjuncts', 'cadscore', '-parameters', [-1.0, 1.0], '-output-adjunct', 'ground_truth');
@@ -74,6 +80,9 @@ voronota_set_adjunct_of_atoms_by_expression("-use [] -expression _multiply -inpu
 voronota_set_adjunct_of_contacts("-use [] -name seq_sep_class -value 5");
 voronota_set_adjunct_of_contacts("-use [] -name covalent_bond -value 0");
 
+voronota_run_hbplus('-select-contacts', 'hbonds');
+voronota_set_adjunct_of_contacts("-use [hbonds] -name hbond -value 1");
+
 voronota_auto_assert_full_success=false;
 voronota_set_adjunct_of_contacts("-use [-min-seq-sep 0 -max-seq-sep 0] -name seq_sep_class -value 0");
 voronota_set_adjunct_of_contacts("-use [-min-seq-sep 1 -max-seq-sep 1] -name seq_sep_class -value 1");
@@ -82,6 +91,7 @@ voronota_set_adjunct_of_contacts("-use [-min-seq-sep 3 -max-seq-sep 3] -name seq
 voronota_set_adjunct_of_contacts("-use [-min-seq-sep 4 -max-seq-sep 4] -name seq_sep_class -value 4");
 voronota_set_adjunct_of_contacts("-use ([-max-seq-sep 0 -max-dist 1.8] or [-min-seq-sep 1 -max-seq-sep 1 -a1 [-aname N] -a2 [-aname C] -max-dist 1.8]) -name covalent_bond -value 1");
 voronota_set_adjunct_of_contacts("-use [-v! voromqa_energy] -name voromqa_energy -value 0");
+voronota_set_adjunct_of_contacts("-use [-v! hbond] -name hbond -value 0");
 voronota_auto_assert_full_success=true;
 
 voronota_unpick_objects();
@@ -100,9 +110,9 @@ for(var i=0;i<modes.length;i++)
 	
 	voronota_export_atoms('-as-pdb', '-file', file_prefix+'.pdb', '-pdb-b-factor', 'ground_truth');
 	
-	voronota_export_adjuncts_of_atoms('-file', file_prefix+'_nodes.csv', '-use', '[]', '-no-serial', '-adjuncts', ['atom_index', 'residue_index', 'atom_type', 'residue_type', 'sas_area', 'voromqa_sas_energy', 'voromqa_score_a', 'voromqa_score_r', 'solvdir_x', 'solvdir_y', 'solvdir_z', 'ground_truth'], '-sep', ',');
+	voronota_export_adjuncts_of_atoms('-file', file_prefix+'_nodes.csv', '-use', '[]', '-no-serial', '-adjuncts', ['atom_index', 'residue_index', 'atom_type', 'residue_type', 'center_x', 'center_y', 'center_z', 'radius', 'sas_area', 'solvdir_x', 'solvdir_y', 'solvdir_z', 'voromqa_sas_energy', 'voromqa_depth', 'voromqa_score_a', 'voromqa_score_r', 'volume', 'volume_vdw', 'ground_truth'], '-sep', ',', '-expand-ids', false);
 
-	voronota_export_adjuncts_of_contacts('-file', file_prefix+'_links.csv', '-atoms-use', '[]', '-contacts-use', '[-no-solvent]', '-no-serial', '-adjuncts', ['atom_index1', 'atom_index2', 'area', 'boundary', 'distance', 'voromqa_energy', 'seq_sep_class', 'covalent_bond'], '-sep', ',');
+	voronota_export_adjuncts_of_contacts('-file', file_prefix+'_links.csv', '-atoms-use', '[]', '-contacts-use', '[-no-solvent]', '-no-serial', '-adjuncts', ['atom_index1', 'atom_index2', 'area', 'boundary', 'distance', 'voromqa_energy', 'seq_sep_class', 'covalent_bond', 'hbond'], '-sep', ',', '-expand-ids', false);
 }
 EOF
 } \
