@@ -32,6 +32,20 @@ voronota_set_chain_name('-chain-name', 'A');
 
 voronota_faspr('-lib-path', '../../tools');
 
+var seq_info=voronota_print_sequence();
+var segments1=seq_info.results[0].output.chains[0].segment_lengths;
+var segments2=seq_info.results[1].output.chains[0].segment_lengths;
+
+if(segments1.length!=1 || segments2.length!=1)
+{
+	throw ("Multiple segements for "+params.apo_pdbid+" "+params.holo_pdbid);
+}
+
+if(segments1[0]!=segments2[0])
+{
+	throw ("Mismatched length of segements for "+params.apo_name+" "+params.holo_name+": "+segments1[0]+" != "+segments2[0]);
+}
+
 voronota_construct_contacts('-probe', 2.8, '-adjunct-solvent-direction', '-calculate-bounding-arcs');
 
 voronota_voromqa_global("-adj-atom-sas-potential", "voromqa_sas_potential", "-adj-contact-energy", "voromqa_energy", "-smoothing-window", 0);
