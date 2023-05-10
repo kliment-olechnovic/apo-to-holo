@@ -15,7 +15,7 @@ Every identifier consists of a PDB entry ID and a chain name.
 
 All pairs of structures were downloaded from [PDB](https://www.rcsb.org) and stripped of all non-protein atoms.
 For every pair, a Voronota-JS script was applied to make apo and holo structures have the same sequence and the same residue numbering.
-The prepared PDB structures are in [prepare_pairs_of_structures/output/structures/](prepare_pairs_of_structures/output/structures/).
+The prepared PDB structures are in [processes/prepare_pairs_of_structures/output/structures](processes/prepare_pairs_of_structures/output/structures).
 
 ## Generated graphs
 
