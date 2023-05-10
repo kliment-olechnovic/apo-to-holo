@@ -2,9 +2,9 @@
 
 cd "$(dirname $0)"
 
-if [ -s "./output/graphs.tar.bz2" ]
+if [ -s "./output/graphs_apo.tar.bz2" ]
 then
-	echo "Presence of file './output/graphs.tar.bz2' indicates that everything is generated and can be extracted with 'tar -xf ./graphs.tar.bz2'"
+	echo "Presence of file './output/graphs_apo.tar.bz2' indicates that everything is generated and can be extracted with 'tar -xf ./graphs_apo.tar.bz2'"
 	exit 0
 fi
 
@@ -18,5 +18,5 @@ done \
 | xargs -L 1 -P 8 ./generate_graphs_for_pair_of_structures.bash
 
 cd ./output
-tar -cjf ./graphs.tar.bz2 ./graphs
-
+tar -cjf ./graphs_apo.tar.bz2 ./graphs/apo
+tar -cjf ./graphs_holo.tar.bz2 ./graphs/holo
