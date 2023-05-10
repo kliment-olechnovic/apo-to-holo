@@ -142,7 +142,8 @@ for example, converted to z-scores using mean and standard deviation values know
 
 ### About choice between regression and classification
 
-Either regression and classification training can be implemented using the provided data.
+Both regression and classification training can be implemented using the provided data.
+
 In case of classification, the threshold for the ground truth values can be set to 0.5, or (better) be determined by looking at the histogram of the ground truth values.
 
 In my opinion, classifiers are easier to train and assess, but good regressors are more useful in practice.
