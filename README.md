@@ -136,8 +136,8 @@ Here are suggestions for assigning feature values for the self-link of atom i, i
 * self __distance__ = 0
 * self __voromqa_energy__ = sum of the __voromqa_energy__ values of (i -> j) links for all neighboring atoms j
 * self __seq_sep_class__ = 0
-* self __covalent_bond__ - 0
-* self __hbond__ - 0
+* self __covalent_bond__ = 0
+* self __hbond__ = 0
 
 It may be a good idea to add an additional indicator attribute to every link, e.g.:
 
