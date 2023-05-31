@@ -127,6 +127,22 @@ For processing with a GNN, it is usually necessary to define bidirectional conne
 * if there is (i -> j) link, there should also be (j -> i) link with the same features
 * there should be (i -> i) link with apppropriate features for every node i
 
+### About self-link features
+
+Here are suggestions for assigning feature values for the self-link of atom i, i.e. (i -> i) link:
+
+* self __area__ = sum of the __area__ values of (i -> j) links for all neighboring atoms j
+* self __boundary__ = sum of the __boundary__ values of (i -> j) links for all neighboring atoms j
+* self __distance__ = 0
+* self __voromqa_energy__ = sum of the __voromqa_energy__ values of (i -> j) links for all neighboring atoms j
+* self __seq_sep_class__ = 0
+* self __covalent_bond__ - 0
+* self __hbond__ - 0
+
+It may be a good idea to add an additional indicator attribute to every link, e.g.:
+
+* __is_self__ - self-link indicator (0 for a normal link, 1 for a self-link)
+
 ### About atom-to-residue pooling
 
 An atom-level graph can be coarse-grained - converted into a residue-level graph.
