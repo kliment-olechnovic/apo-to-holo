@@ -40,7 +40,7 @@ cdt_nodes=cdt_nodes[order(cdt_nodes$ID_chainID, cdt_nodes$ID_resSeq, cdt_nodes$I
 cdt_nodes$ID_serial=".";
 cdt_nodes$ID_altLoc=".";
 cdt_nodes$ID_name=".";
-cdt_nodes$atom_index=1:nrow(cdt_nodes);
+cdt_nodes$atom_index=(1:nrow(cdt_nodes))-1;
 cdt_nodes$residue_index=cdt_nodes$atom_index;
 cdt_nodes$atom_type=cdt_nodes$residue_type;
 for(i in 1:nrow(cdt_nodes))
