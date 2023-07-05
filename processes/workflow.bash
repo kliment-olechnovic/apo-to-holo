@@ -6,3 +6,4 @@ cd "$(dirname $0)"
 
 ./generate_graphs/workflow.bash
 
+./generate_coarse_grained_graphs/workflow.bash

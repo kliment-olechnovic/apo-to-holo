@@ -149,6 +149,11 @@ An atom-level graph can be coarse-grained - converted into a residue-level graph
 A residue-level graph is much smaller, therefore much faster to train GNNs with.
 The area, volume, and energy features can be simply summed when going to the residue level.
 
+For every atom-level graph, a coarse-grained (residue-level) graph was generated in the same format
+(i.e. with the same column names in the table files of nodes and links).
+All the generated coarse-graine apo graphs are in the compressed archive [processes/generate_coarse_grained_graphs/output/graphs_apo.tar.bz2](processes/generate_coarse_grained_graphs/output/graphs_apo.tar.bz2).
+It can be extracted with the following command: `tar -xf graphs_apo.tar.bz2`.
+
 ### About normalization of node and link feature values
 
 It is adviseable, that most of the node and link feature values should be normalized universally (not on per-graph basis, but based on some global statistics) -
