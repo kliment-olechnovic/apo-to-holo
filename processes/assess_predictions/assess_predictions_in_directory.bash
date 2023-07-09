@@ -7,7 +7,7 @@ INDIR="$2"
 
 if [ -z "$INDIR" ] || [ ! -d "$INDIR" ]
 then
-	echo "Missing input director"
+	echo "Missing input directory"
 	exit 1
 fi
 
