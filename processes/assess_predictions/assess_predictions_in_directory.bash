@@ -54,6 +54,15 @@ do
 	> "${OUTDIR}/atoms_pairs/${ID}.pa"
 done
 
+cd "${OUTDIR}/pairs/"
+
+R --vanilla << 'EOF' &> /dev/null
+dt=read.table("all_pairs.txt", stringsAsFactors=FALSE, header=FALSE);
+corcoef=cor(dt$V1, dt$V2);
+png("./all_pairs.png", height=5, width=5, units="in", res=200);
+plot(x=dt$V1, y=dt$V2, xlab="ground truth value", ylab="predicted value", main=paste0("ground truth vs predicted values\nPearson cor. coef. = ", corcoef), col=densCols(dt$V1, dt$V2));
+dev.off();
+EOF
 
 
 
