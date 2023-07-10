@@ -18,5 +18,6 @@ done \
 | xargs -L 1 -P 8 ./generate_graphs_for_pair_of_structures.bash
 
 cd ./output
+find ./graphs/ -type f -name '*.pdb' | xargs rm
 tar -cjf ./graphs_apo.tar.bz2 ./graphs/apo
 tar -cjf ./graphs_holo.tar.bz2 ./graphs/holo

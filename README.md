@@ -44,7 +44,7 @@ For a graph, there are three generated files:
 * `"{PDB ID}_{chain ID}_links.csv"` - graph links table file, one row per link
 * `"{PDB ID}_{chain ID}.pdb"` - graph source structure PDB file with ground truth values written as b-factors
 
-All the generated apo graphs are in the compressed archive [processes/generate_graphs/output/graphs_apo.tar.bz2](processes/generate_graphs/output/graphs_apo.tar.bz2).
+All the generated apo graph files (i.e. files with nodes and links) are in the compressed archive [processes/generate_graphs/output/graphs_apo.tar.bz2](processes/generate_graphs/output/graphs_apo.tar.bz2).
 It can be extracted with the following command: `tar -xf graphs_apo.tar.bz2`.
 
 ### Data format of the graph nodes file
@@ -77,6 +77,10 @@ Description of the graph nodes table columns:
 * __residue_type__ - amino acid residue type encoded as a number from 0 to 19
 * __center_x__, __center_y__, __center_z__ - atom center coordinates, to be either ignored or used with special care ensuring rotational and translational invariance
 * __radius__ - atom van der Waals radius
+* __voromqa_sas_potential__ - atom VoroMQA SAS potential coefficient
+* __residue_mean_sas_potential__ - mean of residue atom VoroMQA SAS potential coefficients
+* __residue_sum_sas_potential__ - sum of residue atom VoroMQA SAS potential coefficients
+* __residue_size__ - number of atoms in a residue
 * __sas_area__ - solvent-accessible surface area: larger area means that the atom is less buried and more exposed
 * __solvdir_x__, __solvdir_y__, __solvdir_z__ - mean solvent-accessible surface direction vector, to be either ignored or used with special care ensuring rotational and translational invariance
 * __voromqa_sas_energy__ - observed atom-solvent VoroMQA energy value
@@ -86,6 +90,7 @@ Description of the graph nodes table columns:
 * __volume__ - volume of the Voronoi cell of an atom constrained inside the solvent-accessible surface
 * __volume_vdw__ - volume of the Voronoi cell of an atom constrained inside the van der Waals surface
 * __ufsr_a1__, __ufsr_a2__, ... , __ufsr_c2__, __ufsr_c3__ - geometric descriptors calculated using the Ultra-fast Shape Recognition algorithm adapted for polymers
+* __ev28__, __ev56__ - geometric buriedness values for different minimum probing radii (2.8, 5.6), range from 0 (most exposed) to 1 (most buried), value of 2 is assigned to all atoms not accessible by external probes
 * __ground_truth__ - residue-level ground truth value to be predicted, same for all the  atoms in the same residue, equals to 1 - (residue CAD-score)
 
 ### Data format of the graph links file
