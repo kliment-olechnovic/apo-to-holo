@@ -21,6 +21,12 @@ mkdir -p "${OUTDIR}/predictions"
 
 find "${INDIR}/" -type f | sort | xargs cp -t "${OUTDIR}/predictions"
 
+find "${OUTDIR}/predictions/" -type f \
+| while read -r PREDFILE
+do
+	cat "$PREDFILE" | awk '{print ($1*0.144)+0.192}' | sponge "$PREDFILE"
+done
+
 mkdir -p "${OUTDIR}/groundtruth"
 
 find "${OUTDIR}/predictions/" -type f | xargs -L 1 basename | sort \
