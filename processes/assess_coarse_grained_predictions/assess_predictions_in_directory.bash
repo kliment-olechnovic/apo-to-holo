@@ -32,7 +32,7 @@ mkdir -p "${OUTDIR}/groundtruth"
 find "${OUTDIR}/predictions/" -type f | xargs -L 1 basename | sort \
 | while read ID
 do
-	cat "../generate_coarse_grained_graphs/output/graphs/apo/${ID}_nodes.csv" | tr ',' ' ' | awk '{print $NF}' > "${OUTDIR}/groundtruth/${ID}"
+	cat "../generate_coarse_grained_graphs/output/graphs/apo/${ID}_nodes.csv" | tr ',' ' ' | awk '{print $NF}' | tail -n +2 > "${OUTDIR}/groundtruth/${ID}"
 done
 
 mkdir -p "${OUTDIR}/pairs"
@@ -64,10 +64,19 @@ cd "${OUTDIR}/pairs/"
 
 R --vanilla << 'EOF' &> /dev/null
 dt=read.table("all_pairs.txt", stringsAsFactors=FALSE, header=FALSE);
-corcoef=cor(dt$V1, dt$V2);
-png("./all_pairs.png", height=5, width=5, units="in", res=200);
-plot(x=dt$V1, y=dt$V2, xlab="ground truth value", ylab="predicted value", main=paste0("ground truth vs predicted values\nPearson cor. coef. = ", corcoef), col=densCols(dt$V1, dt$V2));
+x=dt$V1;
+y=dt$V2;
+zx=(x-mean(x))/sd(x);
+zy=(y-mean(x))/sd(x);
+w=1+4*x;
+ae=abs(zx-zy);
+mae=mean(ae);
+mwae=sum(ae*w)/sum(w);
+corcoef=cor(x, y);
+png("./all_pairs.png", height=5, width=10, units="in", res=200);
+plot(x=x, y=y, xlab="ground truth value", ylab="predicted value", main=paste0("ground truth vs predicted values\nCC=", corcoef, " ; MWAE=", mwae, " ; MAE=", mae), col=densCols(dt$V1, dt$V2));
 dev.off();
+result=data.frame(CC=corcoef, WMAE=wmae, MAE=mae);
 EOF
 
 
