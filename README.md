@@ -184,3 +184,9 @@ One way to handle the imbalanced is to configure (or modify) the loss function t
 I made a separate [repository](https://github.com/kliment-olechnovic/gnn-custom-dataset-example)
 that is intended purely to demonstrate how to make a graph dataset for PyTorch Geometric from graph nodes (vertices) and links (edges) stored in CSV files.
 
+## Another sets of graphs
+
+The reduced set of coarse-grained apo graph files is in the compressed archive [processes/generate_coarse_grained_graphs_including_trajectory_data/output/graphs_apo.tar.bz2](processes/generate_coarse_grained_graphs_including_trajectory_data/output/graphs_apo.tar.bz2).
+
+The corresponding set of coarse-grained trajectory-representative graph files is in the compressed archive [processes/generate_coarse_grained_graphs_including_trajectory_data/output/graphs_trajrep.tar.bz2](processes/generate_coarse_grained_graphs_including_trajectory_data/output/graphs_trajrep.tar.bz2).
+
