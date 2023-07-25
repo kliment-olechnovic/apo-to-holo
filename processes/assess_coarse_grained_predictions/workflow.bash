@@ -8,3 +8,7 @@ do
 	./assess_predictions_in_directory.bash ./output/training/epoch${EPOCHNUM} ./input/training/epoch${EPOCHNUM}.pth
 done
 
+for SETNAME in validation training
+do
+	montage $(find ./output/${SETNAME}/ -type f -name 'all_pairs.png' | sort -V) -geometry +0+0 -tile 3x ./output/plots_of_${SETNAME}_pairs.png
+done

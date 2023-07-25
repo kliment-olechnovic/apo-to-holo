@@ -62,7 +62,9 @@ done
 
 cd "${OUTDIR}/pairs/"
 
-R --vanilla << 'EOF' &> /dev/null
+R --vanilla --args "$INNAME" << 'EOF' &> /dev/null
+args=commandArgs(TRUE);
+inname=args[1];
 dt=read.table("all_pairs.txt", stringsAsFactors=FALSE, header=FALSE);
 x=dt$V1;
 y=dt$V2;
@@ -73,8 +75,8 @@ ae=abs(zx-zy);
 mae=mean(ae);
 mwae=sum(ae*w)/sum(w);
 corcoef=cor(x, y);
-png("./all_pairs.png", height=5, width=10, units="in", res=200);
-plot(x=x, y=y, xlab="ground truth value", ylab="predicted value", main=paste0("ground truth vs predicted values\nCC=", corcoef, " ; MWAE=", mwae, " ; MAE=", mae), col=densCols(dt$V1, dt$V2));
+png("./all_pairs.png", height=5, width=6, units="in", res=200);
+plot(x=x, y=y, xlab="ground truth value", ylab="predicted value", main=paste0(inname, ", ground truth vs predicted values\nCC=", format(corcoef, digits=4), " ; MWAE=", format(mwae, digits=4), " ; MAE=", format(mae, digits=4)), col=densCols(dt$V1, dt$V2));
 dev.off();
 result=data.frame(CC=corcoef, WMAE=wmae, MAE=mae);
 EOF
