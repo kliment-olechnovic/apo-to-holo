@@ -68,15 +68,32 @@ inname=args[1];
 dt=read.table("all_pairs.txt", stringsAsFactors=FALSE, header=FALSE);
 x=dt$V1;
 y=dt$V2;
-zx=(x-mean(x))/sd(x);
-zy=(y-mean(x))/sd(x);
+mean_x=0.18494;
+sd_x=0.14343;
+zx=(x-mean_x)/sd_x;
+zy=(y-mean_x)/sd_x;
 w=1+4*x;
 ae=abs(zx-zy);
 mae=mean(ae);
 mwae=sum(ae*w)/sum(w);
 corcoef=cor(x, y);
+mcc_coefs=c();
+for(xthreshold in seq(0.1, 0.7, 0.05))
+{
+	binx=x;
+	binx[which(x<xthreshold)]=0.0;
+	binx[which(x>=xthreshold)]=1.0;
+	for(ythreshold in seq(0.1, 0.7, 0.05))
+	{
+		biny=y;
+		biny[which(y<ythreshold)]=0.0;
+		biny[which(y>=ythreshold)]=1.0;
+		mcc_coefs=c(mcc_coefs, cor(binx, biny));
+	}
+}
+max_mcc=max(mcc_coefs[which(is.finite(mcc_coefs))]);
 png("./all_pairs.png", height=5, width=6, units="in", res=200);
-plot(x=x, y=y, xlab="ground truth value", ylab="predicted value", main=paste0(inname, ", ground truth vs predicted values\nCC=", format(corcoef, digits=4), " ; MWAE=", format(mwae, digits=4), " ; MAE=", format(mae, digits=4)), col=densCols(dt$V1, dt$V2));
+plot(x=x, y=y, xlab="ground truth value", ylab="predicted value", main=paste0(inname, ", truth vs predicted: CC=", format(corcoef, digits=4), " ;\n MWAE=", format(mwae, digits=4), " ; MAE=", format(mae, digits=4), " ; max_MCC=", format(max_mcc, digits=4)), col=densCols(dt$V1, dt$V2));
 dev.off();
 result=data.frame(CC=corcoef, WMAE=wmae, MAE=mae);
 EOF
