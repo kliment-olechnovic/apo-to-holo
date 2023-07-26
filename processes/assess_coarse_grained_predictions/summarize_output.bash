@@ -39,7 +39,7 @@ for(scorename_i in 1:length(scorenames))
 	}
 }
 plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1);
-legend("topleft", legend=experiments, pch=16, pt.cex=5, cex=2.0, bty='n', col=experiments_colors);
+legend("topleft", legend=experiments, pch=16, pt.cex=3, cex=1.7, bty='n', col=experiments_colors);
 dev.off();
 EOF
 
