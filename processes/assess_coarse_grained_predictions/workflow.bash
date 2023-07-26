@@ -16,3 +16,5 @@ do
 	montage $(find ${OUTDIR}/ -type f -name 'all_pairs.png' | sort -V) -geometry +0+0 -tile 3x ${OUTDIR}/../plots_of_pairs_from_${SETNAME}.png
 done
 
+./summarize_output.bash
+

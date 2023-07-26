@@ -95,10 +95,18 @@ max_mcc=max(mcc_coefs[which(is.finite(mcc_coefs))]);
 png("./all_pairs.png", height=5, width=6, units="in", res=200);
 plot(x=x, y=y, xlab="ground truth value", ylab="predicted value", main=paste0(inname, ", truth vs predicted: CC=", format(corcoef, digits=4), " ;\n MWAE=", format(mwae, digits=4), " ; MAE=", format(mae, digits=4), " ; max_MCC=", format(max_mcc, digits=4)), col=densCols(dt$V1, dt$V2));
 dev.off();
-result=data.frame(CC=corcoef, WMAE=wmae, MAE=mae);
+result=data.frame(CC=corcoef, WMAE=mwae, MAE=mae, max_MCC=max_mcc);
+write.table(result, file="./all_pairs_summary_scores.txt", quote=FALSE, row.names=FALSE, sep=" ");
 EOF
 
+EPOCHNUM="$(echo ${INNAME} | sed 's/epoch//' | sed 's/.pth//')"
+EXPERIMENTNAME="$(basename $(dirname $(dirname ${INDIR})))"
 
+{
+cat ./all_pairs_summary_scores.txt | head -1 | sed 's|^|experiment epoch |'
+cat ./all_pairs_summary_scores.txt | tail -n +2 | sed "s|^|${EXPERIMENTNAME} ${EPOCHNUM} |"
+} \
+| sponge "./all_pairs_summary_scores.txt"
 
 
 
