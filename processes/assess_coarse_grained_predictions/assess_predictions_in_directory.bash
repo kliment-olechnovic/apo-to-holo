@@ -78,6 +78,8 @@ mae=mean(ae);
 mwae=sum(ae*w)/sum(w);
 corcoef=cor(x, y);
 mcc_coefs=c();
+mcc_xthresholds=c();
+mcc_ythresholds=c();
 for(xthreshold in seq(0.1, 0.6, 0.01))
 {
 	binx=x;
@@ -89,13 +91,17 @@ for(xthreshold in seq(0.1, 0.6, 0.01))
 		biny[which(y<ythreshold)]=0.0;
 		biny[which(y>=ythreshold)]=1.0;
 		mcc_coefs=c(mcc_coefs, cor(binx, biny));
+		mcc_xthresholds=c(mcc_xthresholds, xthreshold);
+		mcc_ythresholds=c(mcc_ythresholds, ythreshold);
 	}
 }
 max_mcc=max(mcc_coefs[which(is.finite(mcc_coefs))]);
+max_mcc_xthreshold=mcc_xthresholds[which(is.finite(mcc_coefs) & mcc_coefs==max_mcc)[1]];
+max_mcc_ythreshold=mcc_ythresholds[which(is.finite(mcc_coefs) & mcc_coefs==max_mcc)[1]];
 png("./all_pairs.png", height=5, width=6, units="in", res=200);
 plot(x=x, y=y, xlab="ground truth value", ylab="predicted value", main=paste0(inname, ", truth vs predicted: CC=", format(corcoef, digits=4), " ;\n MWAE=", format(mwae, digits=4), " ; MAE=", format(mae, digits=4), " ; max_MCC=", format(max_mcc, digits=4)), col=densCols(dt$V1, dt$V2));
 dev.off();
-result=data.frame(CC=corcoef, WMAE=mwae, MAE=mae, max_MCC=max_mcc);
+result=data.frame(CC=corcoef, WMAE=mwae, MAE=mae, max_MCC=max_mcc, max_MCC_gt_threshold=max_mcc_xthreshold, max_MCC_pv_threshold=max_mcc_ythreshold);
 write.table(result, file="./all_pairs_summary_scores.txt", quote=FALSE, row.names=FALSE, sep=" ");
 EOF
 
