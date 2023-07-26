@@ -14,7 +14,12 @@ find ./output/ -type f -name 'all_pairs_summary_scores.txt' \
 
 cd ./summary_output
 
-find ../input/ -type f -name 'evaluation_loss' | sort -V > list_of_evaluation_loss_files.txt
+find ../input/ -type f -name 'evaluation_loss' | sort -V \
+| while read ELFILE
+do
+	echo "${ELFILE} $(basename $(dirname ${ELFILE}))"
+done \
+> list_of_evaluation_loss_files.txt
 
 R --vanilla << 'EOF' > /dev/null
 dt=read.table("all_pairs_summary_scores.txt", stringsAsFactors=FALSE, header=TRUE);
@@ -42,7 +47,7 @@ for(scorename_i in 1:length(scorenames))
 	}
 }
 plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1);
-legend("topleft", legend=experiments, pch=16, pt.cex=3, cex=1.7, bty='n', col=experiments_colors);
+legend("topleft", legend=experiments, pch=16, pt.cex=3, cex=1.5, bty='n', col=experiments_colors);
 dev.off();
 
 for(scorename_i in 1:length(scorenames))
@@ -53,7 +58,9 @@ for(scorename_i in 1:length(scorenames))
 	write.table(reordered_dt, file=paste0("./all_pairs_summary_scores_top_by_", scorename, ".txt"), quote=FALSE, row.names=FALSE, sep=" ");
 }
 
-elfs=read.table("list_of_evaluation_loss_files.txt", stringsAsFactors=FALSE, header=FALSE)[[1]];
+elfs_dt=read.table("list_of_evaluation_loss_files.txt", stringsAsFactors=FALSE, header=FALSE);
+elfs=elfs_dt[[1]];
+elfs_pretty=elfs_dt[[2]];
 png("./evaluation_losses.png", height=10, width=10, units="in", res=200);
 plot(x=c(1, 900), y=c(0.5, 1), xlab="Epoch", ylab="Weighted MAE", main="Weighted MAE losses on validation", type="n");
 for(elf_i in 1:length(elfs))
@@ -62,7 +69,7 @@ for(elf_i in 1:length(elfs))
 	els=read.table(elf, stringsAsFactors=FALSE, header=FALSE)[[1]];
 	points(x=1:length(els), y=els, type="l", col=experiments_colors[elf_i]);
 }
-legend("bottomleft", legend=elfs, pch=16, pt.cex=1.5, cex=1.1, bty='n', col=experiments_colors[1:length(elfs)]);
+legend("bottomleft", legend=elfs_pretty, pch=16, pt.cex=1.5, cex=1.1, bty='n', col=experiments_colors[1:length(elfs)]);
 dev.off();
 EOF
 
