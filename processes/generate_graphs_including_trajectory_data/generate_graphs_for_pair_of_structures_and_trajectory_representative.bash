@@ -39,7 +39,14 @@ voronota_set_chain_name('-chain-name', 'A');
 
 voronota_faspr('-lib-path', '../../tools');
 
-voronota_construct_contacts('-probe', 0.01);
+voronota_construct_contacts('-on-objects', ['trajrep'], '-probe', 2.8, '-force');
+voronota_find_connected_components('-on-objects', ['trajrep']);
+voronota_auto_assert_full_success=false;
+voronota_set_tag_of_atoms('-on-objects', ['trajrep'], '-use', '[-v component_number=2:99999]', '-tag', 'separated', '-full-residues');
+voronota_auto_assert_full_success=true;
+voronota_restrict_atoms('-on-objects', ['trajrep'], '-use', '[-t! separated]');
+
+voronota_construct_contacts('-probe', 0.01, '-force');
 
 voronota_set_adjunct_of_atoms_by_expression('-expression', '_linear_combo', '-input-adjuncts', 'volume', '-parameters', [1.0, 0.0], '-output-adjunct', 'volume_vdw');
 
@@ -54,6 +61,9 @@ voronota_cad_score('-target', 'apo', '-model', 'holo', '-t-adj-residue', 'cadsco
 var cadscores_file='./output/cadscores/'+params.apo_name+'__'+params.holo_name+'.txt';
 voronota_export_adjuncts_of_atoms('-on-objects', ['apo'], '-file', cadscores_file, '-use', '[-aname CA]', '-no-serial', '-no-name', '-adjuncts', ['cadscore']);
 voronota_import_adjuncts_of_atoms('-on-objects', ['trajrep'], '-file', cadscores_file);
+
+voronota_cad_score('-target', 'holo', '-model', 'trajrep', '-t-adj-residue', 'trajdiff', '-smoothing-window', 0);
+voronota_cad_score('-target', 'apo', '-model', 'trajrep', '-t-adj-residue', 'trajdiff', '-m-adj-residue', 'trajdiff', '-smoothing-window', 0);
 
 voronota_set_adjunct_of_atoms_by_type_number("-name atom_type -typing-mode protein_atom");
 voronota_set_adjunct_of_atoms_by_type_number("-name residue_type -typing-mode protein_residue");
@@ -86,6 +96,7 @@ voronota_set_adjunct_of_atoms("-use [-v! voromqa_sas_potential] -name voromqa_sa
 voronota_set_adjunct_of_atoms("-use [-v! ev28] -name ev28 -value 2");
 voronota_set_adjunct_of_atoms("-use [-v! ev56] -name ev56 -value 2");
 voronota_set_adjunct_of_atoms("-use [-v! cadscore] -name cadscore -value 1");
+voronota_set_adjunct_of_atoms("-use [-v! trajdiff] -name trajdiff -value 0");
 voronota_auto_assert_full_success=true;
 
 voronota_set_adjunct_of_atoms_by_expression('-expression', '_linear_combo', '-input-adjuncts', 'cadscore', '-parameters', [-1.0, 1.0], '-output-adjunct', 'ground_truth');
@@ -131,7 +142,7 @@ for(var i=0;i<modes.length;i++)
 	
 	voronota_export_atoms('-as-pdb', '-file', file_prefix+'.pdb', '-pdb-b-factor', 'ground_truth');
 	
-	voronota_export_adjuncts_of_atoms('-file', file_prefix+'_nodes.csv', '-use', '[]', '-no-serial', '-adjuncts', ['atom_index', 'residue_index', 'atom_type', 'residue_type', 'center_x', 'center_y', 'center_z', 'radius', 'voromqa_sas_potential', 'residue_mean_sas_potential', 'residue_sum_sas_potential', 'residue_size', 'sas_area', 'solvdir_x', 'solvdir_y', 'solvdir_z', 'voromqa_sas_energy', 'voromqa_depth', 'voromqa_score_a', 'voromqa_score_r', 'volume', 'volume_vdw', 'ufsr_a1', 'ufsr_a2', 'ufsr_a3', 'ufsr_b1', 'ufsr_b2', 'ufsr_b3', 'ufsr_c1', 'ufsr_c2', 'ufsr_c3', 'ev28', 'ev56', 'ground_truth'], '-sep', ',', '-expand-ids', true);
+	voronota_export_adjuncts_of_atoms('-file', file_prefix+'_nodes.csv', '-use', '[]', '-no-serial', '-adjuncts', ['atom_index', 'residue_index', 'atom_type', 'residue_type', 'center_x', 'center_y', 'center_z', 'radius', 'voromqa_sas_potential', 'residue_mean_sas_potential', 'residue_sum_sas_potential', 'residue_size', 'sas_area', 'solvdir_x', 'solvdir_y', 'solvdir_z', 'voromqa_sas_energy', 'voromqa_depth', 'voromqa_score_a', 'voromqa_score_r', 'volume', 'volume_vdw', 'ufsr_a1', 'ufsr_a2', 'ufsr_a3', 'ufsr_b1', 'ufsr_b2', 'ufsr_b3', 'ufsr_c1', 'ufsr_c2', 'ufsr_c3', 'ev28', 'ev56', 'trajdiff', 'ground_truth'], '-sep', ',', '-expand-ids', true);
 
 	voronota_export_adjuncts_of_contacts('-file', file_prefix+'_links.csv', '-atoms-use', '[]', '-contacts-use', '[-no-solvent]', '-no-serial', '-adjuncts', ['atom_index1', 'atom_index2', 'area', 'boundary', 'distance', 'voromqa_energy', 'seq_sep_class', 'covalent_bond', 'hbond'], '-sep', ',', '-expand-ids', true);
 }

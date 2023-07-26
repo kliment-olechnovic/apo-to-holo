@@ -75,6 +75,7 @@ for(i in 1:nrow(cdt_nodes))
 	cdt_nodes$ufsr_c3[i]=mean(rdt$ufsr_c3);
 	cdt_nodes$ev28[i]=mean(rdt$ev28);
 	cdt_nodes$ev56[i]=mean(rdt$ev56);
+	cdt_nodes$trajdiff[i]=mean(rdt$trajdiff);
 	cdt_nodes$ground_truth[i]=mean(rdt$ground_truth);
 }
 
@@ -107,7 +108,7 @@ for(i in 1:nrow(cdt_links))
 
 cdt_links=cdt_links[which(cdt_links$cdt_link_id1!=cdt_links$cdt_link_id2),];
 
-out_nodes_columns=c("ID_chainID", "ID_resSeq", "ID_iCode", "ID_serial", "ID_altLoc", "ID_resName", "ID_name", "atom_index", "residue_index", "atom_type", "residue_type", "center_x", "center_y", "center_z", "radius", "voromqa_sas_potential", "residue_mean_sas_potential", "residue_sum_sas_potential", "residue_size", "sas_area", "solvdir_x", "solvdir_y", "solvdir_z", "voromqa_sas_energy", "voromqa_depth", "voromqa_score_a", "voromqa_score_r", "volume", "volume_vdw", "ufsr_a1", "ufsr_a2", "ufsr_a3", "ufsr_b1", "ufsr_b2", "ufsr_b3", "ufsr_c1", "ufsr_c2", "ufsr_c3", "ev28", "ev56", "ground_truth");
+out_nodes_columns=c("ID_chainID", "ID_resSeq", "ID_iCode", "ID_serial", "ID_altLoc", "ID_resName", "ID_name", "atom_index", "residue_index", "atom_type", "residue_type", "center_x", "center_y", "center_z", "radius", "voromqa_sas_potential", "residue_mean_sas_potential", "residue_sum_sas_potential", "residue_size", "sas_area", "solvdir_x", "solvdir_y", "solvdir_z", "voromqa_sas_energy", "voromqa_depth", "voromqa_score_a", "voromqa_score_r", "volume", "volume_vdw", "ufsr_a1", "ufsr_a2", "ufsr_a3", "ufsr_b1", "ufsr_b2", "ufsr_b3", "ufsr_c1", "ufsr_c2", "ufsr_c3", "ev28", "ev56", "trajdiff", "ground_truth");
 
 out_links_columns=c("ID1_chainID", "ID1_resSeq", "ID1_iCode", "ID1_serial", "ID1_altLoc", "ID1_resName", "ID1_name", "ID2_chainID", "ID2_resSeq", "ID2_iCode", "ID2_serial", "ID2_altLoc", "ID2_resName", "ID2_name", "atom_index1", "atom_index2", "area", "boundary", "distance", "voromqa_energy", "seq_sep_class", "covalent_bond", "hbond");
 
