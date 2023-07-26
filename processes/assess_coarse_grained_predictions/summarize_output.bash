@@ -21,6 +21,7 @@ experiments=union(dt$experiment, dt$experiment);
 experiments_colors=c("#e6194b", "#3cb44b", "#ffe119", "#4363d8", "#f58231", "#911eb4", "#46f0f0", "#f032e6", "#bcf60c", "#fabebe", "#008080", "#e6beff", "#9a6324", "#fffac8", "#800000", "#aaffc3", "#808000", "#ffd8b1", "#000075", "#808080", "#000000")[1:length(experiments)];
 scorenames=c("WMAE", "MAE", "CC", "max_MCC");
 scorenames_pretty=c("Weighted MAE", "MAE", "Pearson CC", "max MCC");
+
 png("./all_pairs_summary_scores.png", height=10, width=8, units="in", res=200);
 par(mfrow=c(3, 2));
 for(scorename_i in 1:length(scorenames))
@@ -41,5 +42,20 @@ for(scorename_i in 1:length(scorenames))
 plot(NULL ,xaxt='n',yaxt='n',bty='n',ylab='',xlab='', xlim=0:1, ylim=0:1);
 legend("topleft", legend=experiments, pch=16, pt.cex=3, cex=1.7, bty='n', col=experiments_colors);
 dev.off();
+
+for(scorename_i in 1:length(scorenames))
+{
+	scorename=scorenames[scorename_i];
+	ocoef=ifelse(is.element(scorename, c("WMAE", "MAE")), 1.0, -1.0);
+	reordered_dt=dt[order(dt[,scorename]*ocoef)[1:20],];
+	write.table(reordered_dt, file=paste0("./all_pairs_summary_scores_top_by_", scorename, ".txt"), quote=FALSE, row.names=FALSE, sep=" ");
+}
 EOF
+
+find ./ -type f -name 'all_pairs_summary_scores_top_by_*.txt' \
+| while read TFILE
+do
+	cat "$TFILE" | column -t | sponge "$TFILE"
+done
+
 
