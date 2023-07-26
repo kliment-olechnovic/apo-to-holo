@@ -78,12 +78,12 @@ mae=mean(ae);
 mwae=sum(ae*w)/sum(w);
 corcoef=cor(x, y);
 mcc_coefs=c();
-for(xthreshold in seq(0.1, 0.7, 0.05))
+for(xthreshold in seq(0.1, 0.6, 0.01))
 {
 	binx=x;
 	binx[which(x<xthreshold)]=0.0;
 	binx[which(x>=xthreshold)]=1.0;
-	for(ythreshold in seq(0.1, 0.7, 0.05))
+	for(ythreshold in seq(0.1, 0.6, 0.01))
 	{
 		biny=y;
 		biny[which(y<ythreshold)]=0.0;
