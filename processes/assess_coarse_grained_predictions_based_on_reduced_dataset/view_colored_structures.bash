@@ -13,8 +13,8 @@ paste \
   <(find "${OUTDIR}/atoms_pairs/" -type f -name '*.pa' | sort) \
 | xargs voronota-gl \
   -scripts \
-  'spectrum-atoms -adjunct gt -scheme bwr -min-val 0.1 -max-val 0.6' \
-  'spectrum-atoms -adjunct tf -scheme bwr -min-val 0.1 -max-val 0.4' \
+  'spectrum-atoms -adjunct gt -scheme bwr' \
+  'spectrum-atoms -adjunct tf -scheme bwr' \
   'multisampling-none' \
   'impostoring-simple' \
   'show-atoms' \

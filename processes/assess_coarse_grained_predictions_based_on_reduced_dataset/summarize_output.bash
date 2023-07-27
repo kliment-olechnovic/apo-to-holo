@@ -62,7 +62,7 @@ elfs_dt=read.table("list_of_evaluation_loss_files.txt", stringsAsFactors=FALSE, 
 elfs=elfs_dt[[1]];
 elfs_pretty=elfs_dt[[2]];
 png("./evaluation_losses.png", height=10, width=10, units="in", res=200);
-plot(x=c(1, 900), y=c(0.5, 1), xlab="Epoch", ylab="Weighted MAE", main="Weighted MAE losses on validation", type="n");
+plot(x=c(1, 900), y=c(0.4, 1), xlab="Epoch", ylab="Loss, weighted MAE or (1-CC)", main="Weighted MAE losses on validation", type="n");
 for(elf_i in 1:length(elfs))
 {
 	elf=elfs[elf_i];
