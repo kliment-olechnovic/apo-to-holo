@@ -182,11 +182,66 @@ One way to handle the imbalanced is to configure (or modify) the loss function t
 ### About using the data in PyTorch Geometric
 
 I made a separate [repository](https://github.com/kliment-olechnovic/gnn-custom-dataset-example)
-that is intended purely to demonstrate how to make a graph dataset for PyTorch Geometric from graph nodes (vertices) and links (edges) stored in CSV files.
+that is intended purely to demonstrate how to make a graph dataset class for PyTorch Geometric from graph nodes (vertices) and links (edges) stored in CSV files.
 
-## Another sets of graphs
+## Possible workflow for a training exercize for students
 
-The reduced set of coarse-grained apo graph files is in the compressed archive [processes/generate_coarse_grained_graphs_including_trajectory_data/output/graphs_apo.tar.bz2](processes/generate_coarse_grained_graphs_including_trajectory_data/output/graphs_apo.tar.bz2).
+The goal would be to develop a predictor of node-level ground truth values - that is, a predictor of how much every protein residue changes when a an apo-to-holo transition happens.
+It can be done in many ways, becaus different choices can be made.
+Here is a possible (not the only one possible) roadmap:
 
-The corresponding set of coarse-grained trajectory-representative graph files is in the compressed archive [processes/generate_coarse_grained_graphs_including_trajectory_data/output/graphs_trajrep.tar.bz2](processes/generate_coarse_grained_graphs_including_trajectory_data/output/graphs_trajrep.tar.bz2).
+1. Get the data:
+    * if you want bigger graphs with a lot of information, download [processes/generate_graphs/output/graphs_apo.tar.bz2](processes/generate_graphs/output/graphs_apo.tar.bz2)
+    * if you want smaller (coarse) graphs with less information, download [processes/generate_coarse_grained_graphs/output/graphs_apo.tar.bz2](processes/generate_coarse_grained_graphs/output/graphs_apo.tar.bz2)
+
+2. Prepare and normalize the data:
+    * separate the ground truth values from everything else - remove them from the input node features, the ground truth must not be seen during any training
+    * remove or add node or edge feature values - this is were you may keep or discard non-scalar (vector) features or other features that need special consideration
+    * add links to make all connections bidirectional
+    * add self-links
+    * where appropriate, normalize values in nodes and links - for example, convert scalar values to z-scores
+
+3. Import graphs into PyTorch:
+    * a possible (although maybe a bit outdated) example of how to make a graph dataset for PyTorch Geometric is [here](https://github.com/kliment-olechnovic/gnn-custom-dataset-example)
+
+4. Decide how to do training/validation/testing:
+    * for such a small dataset, a cross-validation (e.g. 5-fold cross-validation) may be a good choice, because it will allow the to use all the data and compute confidence estimates
+
+5. Decide whether you want to do regression or classification:
+    * if you want to do classification, convert the ground truth values using some threshold (e.g. 0.5)
+
+6. Choose what loss functions are appropriate for the task:
+    * you can use a weighted combination of multiple loss functions
+
+7. Decide how to deal with the data imbalance, below are some choices:
+    * use an appropriate loss function like the focal loss or the weighted cross-entropy
+    * use a balancing sampling strategy, e.g. train on nodes that correspond to rare ground truth as often as on nodes that correspond to popular ground truth
+
+8. Define your neural network model architecture:
+    * if you use only scalar features, you can choose a lot of standard operators from PyTorch Geometric
+    * if you decide to involve vector features, be very careful and use only operations that maintain equivariance or invariance
+    * be aware of the number of trainable parameters
+
+9. Decide on the training configuration:
+    * choose an optimizer (e.g. Adam) and its initial parameters, e.g. learning rate
+    * optionally, define a procedure to adjust the learning or other parameters during training, e.g. reduce learning rate after some epochs
+    * define training stopping conditions, e.g. max epoch
+    * define batching strategy, e.g. whether to use one or more graphs per batch
+
+10. Decide what metrics to use for testing:
+    * it can be the loss functions, but it can also be other, non-differentiable scores like PR AUC
+    * ensure that the testing scores account for the data imbalance
+
+11. Define and run the computational experiment (i.e. cross-validation or training/validation/testing) workflow
+    * record and visualize all the loss values and testing scores, after every epoch
+
+12. In early stages of the computational experiments try to achieve that your training loss is decreasing and you are able to overfit your model, meaning that there is enough capacity for learning.
+    
+13. Analyze the results, review your choices and:
+    * make other design choices
+    * adjust training parameters
+    * rerun the computational experiment
+
+14. Summarize the final results.
+
 
